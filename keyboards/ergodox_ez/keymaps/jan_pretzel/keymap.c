@@ -31,10 +31,10 @@ enum custom_keycodes {
 /* OS Identifier */
 enum {
   OS_WIN = 0,
-  OS_OSX,
+  OS_LIN,
 };
 
-uint8_t os_type = OS_OSX;
+uint8_t os_type = OS_LIN;
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Qwerty layer
@@ -246,11 +246,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 };
 
-void tap(uint16_t code) {
-  register_code(code);
-  unregister_code(code);
-}
-
 const uint16_t PROGMEM fn_actions[] = {
     [1] = ACTION_LAYER_TAP_TOGGLE(SYMB)                // FN1 - Momentary Layer 1 (Symbols)
 };
@@ -301,12 +296,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         switch (os_type) {
           case OS_WIN:
             register_code(KC_LCTL);
-            tap(KC_C);
+            tap_code(KC_C);
             unregister_code(KC_LCTL);
             break;
-          case OS_OSX:
+          case OS_LIN:
             register_code(KC_LGUI);
-            tap(KC_C);
+            tap_code(KC_C);
             unregister_code(KC_LGUI);
             break;
         }
@@ -319,12 +314,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         switch (os_type) {
           case OS_WIN:
             register_code(KC_LCTL);
-            tap(KC_V);
+            tap_code(KC_V);
             unregister_code(KC_LCTL);
             break;
-          case OS_OSX:
+          case OS_LIN:
             register_code(KC_LGUI);
-            tap(KC_V);
+            tap_code(KC_V);
             unregister_code(KC_LGUI);
             break;
         }
@@ -337,12 +332,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         switch (os_type) {
           case OS_WIN:
             register_code(KC_LCTL);
-            tap(KC_X);
+            tap_code(KC_X);
             unregister_code(KC_LCTL);
             break;
-          case OS_OSX:
+          case OS_LIN:
             register_code(KC_LGUI);
-            tap(KC_X);
+            tap_code(KC_X);
             unregister_code(KC_LGUI);
             break;
         }
@@ -388,23 +383,15 @@ void matrix_init_user(void) {
   ergodox_led_all_set(LED_BRIGHTNESS_HI);
 };
 
-void german_umlaut_osx(uint16_t code, bool uppercase) {
-  register_code(KC_RALT);
-  register_code(KC_U);
-  unregister_code(KC_RALT);
-  unregister_code(KC_U);
-  if (uppercase) register_code(KC_LSFT);
-  tap(code);
-  if (uppercase) unregister_code(KC_LSFT);
-}
 
-void german_umlaut_win(uint16_t code, bool uppercase) {
-
-  register_code(KC_RALT);
+void german_umlaut_lin(uint16_t code, bool uppercase) {
+  tap_code(KC_RALT);
+  register_code(KC_LSFT);
+  tap_code(KC_QUOT);
+  unregister_code(KC_LSFT);
   if (uppercase) register_code(KC_LSFT);
-  tap(code);
+  tap_code(code);
   if (uppercase) unregister_code(KC_LSFT);
-  unregister_code(KC_RALT);
 }
 
 LEADER_EXTERNS();
@@ -426,7 +413,7 @@ void matrix_scan_user(void) {
       rgblight_enable();
 
       if (os_type == OS_WIN) rgblight_setrgb(0, 0, 255);
-      else if (os_type == OS_OSX) rgblight_setrgb(255, 255, 255);
+      else if (os_type == OS_LIN) rgblight_setrgb(0, 255, 0);
 
       wait_ms(100);
 
@@ -440,10 +427,17 @@ void matrix_scan_user(void) {
     SEQ_ONE_KEY(KC_O) {
       switch (os_type) {
       case OS_WIN:
-        german_umlaut_win(KC_P, false);
+        tap_code(KC_NLCK);
+        register_code(KC_RALT);
+        tap_code(KC_KP_0);
+        tap_code(KC_KP_2);
+        tap_code(KC_KP_4);
+        tap_code(KC_KP_6);
+        unregister_code(KC_RALT);
+        tap_code(KC_NLCK);
         break;
-      case OS_OSX:
-        german_umlaut_osx(KC_O, false);
+      case OS_LIN:
+        german_umlaut_lin(KC_O, false);
         break;
       }
     }
@@ -451,10 +445,17 @@ void matrix_scan_user(void) {
     SEQ_TWO_KEYS(KC_O, KC_O) {
       switch (os_type) {
       case OS_WIN:
-        german_umlaut_win(KC_P, true);
+        tap_code(KC_NLCK);
+        register_code(KC_RALT);
+        tap_code(KC_KP_0);
+        tap_code(KC_KP_2);
+        tap_code(KC_KP_1);
+        tap_code(KC_KP_4);
+        unregister_code(KC_RALT);
+        tap_code(KC_NLCK);
         break;
-      case OS_OSX:
-        german_umlaut_osx(KC_O, true);
+      case OS_LIN:
+        german_umlaut_lin(KC_O, true);
         break;
       }
     }
@@ -462,10 +463,17 @@ void matrix_scan_user(void) {
     SEQ_ONE_KEY(KC_A) {
       switch (os_type) {
       case OS_WIN:
-        german_umlaut_win(KC_Q, false);
+        tap_code(KC_NLCK);
+        register_code(KC_RALT);
+        tap_code(KC_KP_0);
+        tap_code(KC_KP_2);
+        tap_code(KC_KP_2);
+        tap_code(KC_KP_8);
+        unregister_code(KC_RALT);
+        tap_code(KC_NLCK);
         break;
-      case OS_OSX:
-        german_umlaut_osx(KC_A, false);
+      case OS_LIN:
+        german_umlaut_lin(KC_A, false);
         break;
       }
     }
@@ -473,10 +481,17 @@ void matrix_scan_user(void) {
     SEQ_TWO_KEYS(KC_A, KC_A) {
       switch (os_type) {
       case OS_WIN:
-        german_umlaut_win(KC_Q, true);
+        tap_code(KC_NLCK);
+        register_code(KC_RALT);
+        tap_code(KC_KP_0);
+        tap_code(KC_KP_1);
+        tap_code(KC_KP_9);
+        tap_code(KC_KP_6);
+        unregister_code(KC_RALT);
+        tap_code(KC_NLCK);
         break;
-      case OS_OSX:
-        german_umlaut_osx(KC_A, true);
+      case OS_LIN:
+        german_umlaut_lin(KC_A, true);
         break;
       }
     }
@@ -484,10 +499,17 @@ void matrix_scan_user(void) {
     SEQ_ONE_KEY(KC_U) {
       switch (os_type) {
       case OS_WIN:
-        german_umlaut_win(KC_Y, false);
+        tap_code(KC_NLCK);
+        register_code(KC_RALT);
+        tap_code(KC_KP_0);
+        tap_code(KC_KP_2);
+        tap_code(KC_KP_5);
+        tap_code(KC_KP_2);
+        unregister_code(KC_RALT);
+        tap_code(KC_NLCK);
         break;
-      case OS_OSX:
-        german_umlaut_osx(KC_U, false);
+      case OS_LIN:
+        german_umlaut_lin(KC_U, false);
         break;
       }
     }
@@ -495,18 +517,59 @@ void matrix_scan_user(void) {
     SEQ_TWO_KEYS(KC_U, KC_U) {
       switch (os_type) {
       case OS_WIN:
-        german_umlaut_win(KC_Y, true);
+        tap_code(KC_NLCK);
+        register_code(KC_RALT);
+        tap_code(KC_KP_0);
+        tap_code(KC_KP_2);
+        tap_code(KC_KP_2);
+        tap_code(KC_KP_0);
+        unregister_code(KC_RALT);
+        tap_code(KC_NLCK);
         break;
-      case OS_OSX:
-        german_umlaut_osx(KC_U, true);
+      case OS_LIN:
+        german_umlaut_lin(KC_U, true);
         break;
       }
     }
 
     SEQ_ONE_KEY(KC_S) {
-      register_code(KC_RALT);
-      tap(KC_S);
-      unregister_code(KC_RALT);
+      switch (os_type) {
+      case OS_WIN:
+        tap_code(KC_NLCK);
+        register_code(KC_RALT);
+        tap_code(KC_KP_0);
+        tap_code(KC_KP_2);
+        tap_code(KC_KP_2);
+        tap_code(KC_KP_3);
+        unregister_code(KC_RALT);
+        tap_code(KC_NLCK);
+        break;
+      case OS_LIN:
+        tap_code(KC_RALT);
+        tap_code(KC_S);
+        tap_code(KC_S);
+        break;
+      }
+    }
+
+    SEQ_ONE_KEY(KC_E) {
+      switch (os_type) {
+      case OS_WIN:
+        tap_code(KC_NLCK);
+        register_code(KC_RALT);
+        tap_code(KC_KP_0);
+        tap_code(KC_KP_1);
+        tap_code(KC_KP_2);
+        tap_code(KC_KP_8);
+        unregister_code(KC_RALT);
+        tap_code(KC_NLCK);
+        break;
+      case OS_LIN:
+        tap_code(KC_RALT);
+        tap_code(KC_E);
+        tap_code(KC_EQL);
+        break;
+      }
     }
   }
 };
