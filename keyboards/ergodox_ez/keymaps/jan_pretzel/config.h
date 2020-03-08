@@ -9,4 +9,9 @@
 #undef LEADER_TIMEOUT
 #define LEADER_TIMEOUT 500
 
+#define IGNORE_MOD_TAP_INTERRUPT
+#undef PERMISSIVE_HOLD
+
+#define FORCE_NKRO
+
 #endif
