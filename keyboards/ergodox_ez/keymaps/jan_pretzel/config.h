@@ -14,4 +14,9 @@
 
 #define FORCE_NKRO
 
+// defining it per key, since TAPPING_FORCE_HOLD will break anything
+// that uses tapping toggles (Such as the TT layer keycode, and the
+// One Shot Tapping Toggle).
+#define TAPPING_FORCE_HOLD_PER_KEY
+
 #endif

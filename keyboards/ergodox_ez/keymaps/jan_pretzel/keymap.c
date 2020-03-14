@@ -348,6 +348,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
+bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case LT(NAV, KC_F):
+      return true;
+    default:
+      return false;
+  }
+}
+
 void ergodox_blink_all_leds_reverse(void) {
     ergodox_led_all_off();
     ergodox_led_all_set(LED_BRIGHTNESS_DEFAULT);
